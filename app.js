@@ -19,8 +19,8 @@ app.set("view engine", 'ejs');
 
 // global variable scope
 
-var items = ['Pray','Drink Water', 'Make bedroom','morning worship'];
-
+let items = ['Pray','Drink Water', 'Make bedroom','morning worship'];
+let workList = [];
 // IF THERE IS ANY STATIC FILE PUT IT IN PUBLIC FOLDER
 app.use(express.static("public"));
  
@@ -38,22 +38,32 @@ app.get("/", function(req, res) {
     const day = today.toLocaleDateString('en-EN',options);
     // const day = today.toLocaleDateString('id-ID',options); untuk bahasa indonesia
     
-  res.render('list', {kindofday: day , listItems : items });
+  res.render('list', {h1: day , listItems : items });
     
     // variable day = array dari variable days dimana fungsi / method getday === hari dari 0-6
     // see mdn doc or w3s tentang metod getday / new date() jadi saturday = 7 jika dimulai dari 1
 });
  
-//HOME ROUTE POST REQUESTS
+//HOME ROUTE AND WORK ROUTE POST REQUESTS
 app.post("/", function(req, res) {
   
-  var item = req.body.newItems;
+  let item = req.body.newItems;
+  
+  if (req.body.list === 'Work list'){
+  workList.push(item);
+  res.redirect('/work');  
+ } else { 
   items.push(item);
-
   res.redirect('/');
-
+ }
   });
- 
+
+//WORK ROUTE GET REQUESTS 
+  app.get("/work", function(req, res) {
+  res.render('list', {h1: "Work list" , listItems : workList });
+
+    });
+   
 //SET UP EXPRESS SERVER TO LISTEN TO CURRENT PORT
 const port = process.env.LOCAL_PORT;
 const host = process.env.HOST;
