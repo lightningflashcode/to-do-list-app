@@ -8,16 +8,18 @@ const https = require("https");
 
 // READING ENVIRONMENT VARIABLES
 const dotenv = require("dotenv").config();
-// .config({path: path.join(__dirname, '.env')});or use this
-
+// .config({path: path.join(__dirname, '.env')}); or use this
  
  // INITIALISE THE EXPRESS APP AND EJS
 const app = express();
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use("view engine", 'ejs');
+app.set("view engine", 'ejs');
 
+// global variable scope
+
+var items = ['Pray','Drink Water', 'Make bedroom','morning worship'];
 
 // IF THERE IS ANY STATIC FILE PUT IT IN PUBLIC FOLDER
 app.use(express.static("public"));
@@ -25,13 +27,18 @@ app.use(express.static("public"));
 //HOME ROUTE GET REQUESTS
 app.get("/", function(req, res) {
  
-    let today = new Date();
+    const today = new Date();
 
-    var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    // var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
   
-    var day=days[today.getDay()];
+    // var day=days[today.getDay()]; we will make a better function it is toLocaleDateString
+
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+    const day = today.toLocaleDateString('en-EN',options);
+    // const day = today.toLocaleDateString('id-ID',options); untuk bahasa indonesia
     
-  res.render('list', {kindofday: day});
+  res.render('list', {kindofday: day , listItems : items });
     
     // variable day = array dari variable days dimana fungsi / method getday === hari dari 0-6
     // see mdn doc or w3s tentang metod getday / new date() jadi saturday = 7 jika dimulai dari 1
@@ -40,6 +47,11 @@ app.get("/", function(req, res) {
 //HOME ROUTE POST REQUESTS
 app.post("/", function(req, res) {
   
+  var item = req.body.newItems;
+  items.push(item);
+
+  res.redirect('/');
+
   });
  
 //SET UP EXPRESS SERVER TO LISTEN TO CURRENT PORT

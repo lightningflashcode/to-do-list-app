@@ -6,6 +6,21 @@
     <title>to do list app</title>
 </head>
 <body>
-    <h1>its a <% kindofday %> </h1>
+     <h1><%= kindofday %> </h1>
+
+    <ul>
+       <% for(var i=0; i<listItems.length; i++){ %>
+        <li> <%= listItems[i] %></li>
+        <% } %> 
+    </ul>
+
+
+
+    <form action="/" method="POST">
+    <input type="text" placeholder="what do you want to do ?" name="newItems">
+   <button type="submit" ></button>
+   </form>
+ 
+
 </body>
 </html>
