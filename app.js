@@ -1,44 +1,39 @@
-// initiating npm module
-
-const express = require ('express');
-const dotenv = require ('dotenv').config;
-const bodyParser = require ('body-parser');
-const ejs = require ('ejs');
-
-// initiating express and body parser app and ejs
-
-const app = express();
-
-app.use("view engine", 'ejs');
-
-app.use(bodyParser.urlencoded({extended : true}));
-
-// set home route app
-
-app.get('/', function (req , res) {
+// jshint esversion:6
+// jshint esversion:8
  
-let today = new Date();
+// IMPORTING MODULES
+const express = require("express");
+const bodyParser = require("body-parser");
+const https = require("https");
 
-  var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+// READING ENVIRONMENT VARIABLES
+const dotenv = require("dotenv").config();
+// .config({path: path.join(__dirname, '.env')});or use this
 
-  var day=days[today.getDay()];
-  
-res.render('list', {kindofday: day});
-  
-  // variable day = array dari variable days dimana fungsi / method getday === hari dari 0-6
-  // lihat documentasi mdn atau w3s tentang metod getday / new date() jadi saturday = 7 jika dimulai dari 1
+ 
+ // INITIALISE THE EXPRESS APP
+const app = express();
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
-  
-
-
+// IF THERE IS ANY STATIC FILE PUT IT IN PUBLIC FOLDER
+app.use(express.static("public"));
+ 
+//HOME ROUTE GET REQUESTS
+app.get("/", function(req, res) {
+  res.sendFile(__dirname + "/signup.html");
 });
+ 
+//HOME ROUTE POST REQUESTS
+app.post("/", function(req, res) {
+  
+  });
+ 
+//SET UP EXPRESS SERVER TO LISTEN TO CURRENT PORT
+const port = process.env.LOCAL_PORT;
+const host = process.env.HOST;
 
-// set listening to server port
-
-const port = 4000;
-// port = 4000 or process.env.LOCALPORT
-
-
-app.listen(process.env.PORT||port, ()=>{
-console.log("server is connected to " , port)
+app.listen(process.env.PORT || port, function() {
+  console.log(`test app in server ${host}:${port}`);
 });
